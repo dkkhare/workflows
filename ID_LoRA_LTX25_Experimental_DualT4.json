@@ -1,0 +1,310 @@
+{
+  "last_node_id": 6,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "IDLoraTwoStageModelLoader",
+      "pos": [
+        100,
+        200
+      ],
+      "size": [
+        400,
+        380
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Pipeline",
+          "type": "ID_LORA_PIPELINE",
+          "links": [
+            1,
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "IDLoraTwoStageModelLoader"
+      },
+      "widgets_values": [
+        "ltx-2.5-22b-dev-transformer-comfy-int8-convrot.safetensors",
+        "",
+        "id-lora-talkvid-ltx2.3.safetensors",
+        0.75,
+        "ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+        "ltx-2.5-22b-distilled-lora-450-bf16.safetensors",
+        "int8",
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "id": 2,
+      "type": "IDLoraPromptEncoder",
+      "pos": [
+        600,
+        100
+      ],
+      "size": [
+        400,
+        300
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pipeline",
+          "type": "ID_LORA_PIPELINE",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Conditioning",
+          "type": "ID_LORA_CONDITIONING",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "IDLoraPromptEncoder"
+      },
+      "widgets_values": [
+        "[VISUAL]: A natural, photorealistic talking-head video. Preserve the face and appearance from the reference image. [SPEECH]: The speaker talks naturally with accurate lip synchronization. [SOUNDS]: Clean room tone.",
+        "blurry, distorted face, deformed mouth, low quality"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "LoadImage",
+      "pos": [
+        600,
+        500
+      ],
+      "size": [
+        300,
+        314
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "poster_image.png",
+        "image"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "LoadAudio",
+      "pos": [
+        600,
+        870
+      ],
+      "size": [
+        300,
+        124
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "reference.mp3"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "IDLoraTwoStageSampler",
+      "pos": [
+        1100,
+        200
+      ],
+      "size": [
+        400,
+        560
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pipeline",
+          "type": "ID_LORA_PIPELINE",
+          "link": 2
+        },
+        {
+          "name": "conditioning",
+          "type": "ID_LORA_CONDITIONING",
+          "link": 3
+        },
+        {
+          "name": "first_frame",
+          "type": "IMAGE",
+          "link": 4
+        },
+        {
+          "name": "reference_audio",
+          "type": "AUDIO",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Video",
+          "type": "VIDEO",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "IDLoraTwoStageSampler"
+      },
+      "widgets_values": [
+        42,
+        "fixed",
+        256,
+        256,
+        49,
+        12,
+        24,
+        2,
+        4,
+        true,
+        384,
+        false
+      ]
+    },
+    {
+      "id": 6,
+      "type": "SaveVideo",
+      "pos": [
+        1600,
+        300
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 6
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/ID_LoRA_LTX25_experimental",
+        "auto",
+        "auto"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "ID_LORA_PIPELINE"
+    ],
+    [
+      2,
+      1,
+      0,
+      5,
+      0,
+      "ID_LORA_PIPELINE"
+    ],
+    [
+      3,
+      2,
+      0,
+      5,
+      1,
+      "ID_LORA_CONDITIONING"
+    ],
+    [
+      4,
+      3,
+      0,
+      5,
+      2,
+      "IMAGE"
+    ],
+    [
+      5,
+      4,
+      0,
+      5,
+      3,
+      "AUDIO"
+    ],
+    [
+      6,
+      5,
+      0,
+      6,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7,
+      "offset": [
+        0,
+        0
+      ]
+    }
+  },
+  "version": 0.4,
+  "_experimental_warning": "NOT EXECUTABLE AS WRITTEN: IDLoraTwoStageModelLoader is the legacy LTX-2.3 custom-node loader and expects LTX-2.3 checkpoint conventions. This JSON is a parameter/porting sketch only, not a validated LTX-2.5 workflow. Do not run until the loader has been ported to LTX-2.5 and its architecture/LoRA key compatibility has been verified."
+}
